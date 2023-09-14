@@ -437,6 +437,34 @@ head(ReplicateAverages)</code></pre>
 </div>
 <div id="example-2-power-analysis" class="section level1">
 <h1>Example 2: Power analysis</h1>
+<p>In the main paper, it also mentions about running power analysis to
+estimate the required sample number.</p>
+<p>Here is an example derived from the webpage: <a href="https://www.alexanderdemos.org/ANOVA4.html#Cohen’s_(d)" class="uri">https://www.alexanderdemos.org/ANOVA4.html#Cohen’s_(d)</a></p>
+<p>To run a power analysis for sample size estimation, you will
+need:</p>
+<ol style="list-style-type: decimal">
+<li>Effect size (in Cohen’s d): based on literature</li>
+<li>significance level: 0.05</li>
+<li>power: 0.8</li>
+</ol>
+<pre class="r"><code>library(pwr)</code></pre>
+<p>in the the function pwr.t.test, you put NULL for the parameter you
+aim to estimate.</p>
+<pre class="r"><code>power.analysis &lt;- pwr.t.test(n = NULL, 
+                             d = .4, 
+                             sig.level = 0.05,
+                             power = .80, 
+                             type = c(&quot;one.sample&quot;), 
+                             alternative = c(&quot;two.sided&quot;))
+power.analysis</code></pre>
+<pre><code>## 
+##      One-sample t test power calculation 
+## 
+##               n = 51.00945
+##               d = 0.4
+##       sig.level = 0.05
+##           power = 0.8
+##     alternative = two.sided</code></pre>
 </div>
 
 

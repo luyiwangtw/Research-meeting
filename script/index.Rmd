@@ -65,7 +65,29 @@ ggplot(dat,
 
 # Example 2: Power analysis
 
-```{r}
+In the main paper, it also mentions about running power analysis to estimate the required sample number.
 
+Here is an example derived from the webpage: https://www.alexanderdemos.org/ANOVA4.html#Cohen’s_(d)
+
+To run a power analysis for sample size estimation, you will need:
+
+1. Effect size (in Cohen’s d): based on literature 
+2. significance level: 0.05
+3. power: 0.8
+
+```{r}
+library(pwr)
+```
+
+in the the function pwr.t.test, you put NULL for the parameter you aim to estimate.
+
+```{r}
+power.analysis <- pwr.t.test(n = NULL, 
+                             d = .4, 
+                             sig.level = 0.05,
+                             power = .80, 
+                             type = c("one.sample"), 
+                             alternative = c("two.sided"))
+power.analysis
 ```
 
