@@ -54,7 +54,6 @@ head(ReplicateAverages)
 ggplot(dat, 
        aes(x = Treatment, y = Speed, color = factor(Replicate))) + 
   geom_beeswarm(cex = 3) + # spread the individual data points
-  scale_colour_brewer(palette = "Set1") + 
   geom_beeswarm(data = ReplicateAverages, size = 8) + 
   stat_compare_means(data = ReplicateAverages, 
                      comparisons = list(c("Control", "Drug")), 
