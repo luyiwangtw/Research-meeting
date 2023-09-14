@@ -83,10 +83,10 @@ in the the function pwr.t.test, you put NULL for the parameter you aim to estima
 
 ```{r}
 power.analysis <- pwr.t.test(n = NULL, 
-                             d = .4, 
+                             d = 0.4, 
                              sig.level = 0.05,
-                             power = .80, 
-                             type = c("one.sample"), 
+                             power = 0.80, 
+                             type = c("two.sample"), 
                              alternative = c("two.sided"))
 power.analysis
 ```

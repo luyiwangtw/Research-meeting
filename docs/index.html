@@ -451,20 +451,22 @@ need:</p>
 <p>in the the function pwr.t.test, you put NULL for the parameter you
 aim to estimate.</p>
 <pre class="r"><code>power.analysis &lt;- pwr.t.test(n = NULL, 
-                             d = .4, 
+                             d = 0.4, 
                              sig.level = 0.05,
-                             power = .80, 
-                             type = c(&quot;one.sample&quot;), 
+                             power = 0.80, 
+                             type = c(&quot;two.sample&quot;), 
                              alternative = c(&quot;two.sided&quot;))
 power.analysis</code></pre>
 <pre><code>## 
-##      One-sample t test power calculation 
+##      Two-sample t test power calculation 
 ## 
-##               n = 51.00945
+##               n = 99.08032
 ##               d = 0.4
 ##       sig.level = 0.05
 ##           power = 0.8
-##     alternative = two.sided</code></pre>
+##     alternative = two.sided
+## 
+## NOTE: n is number in *each* group</code></pre>
 </div>
 
 
