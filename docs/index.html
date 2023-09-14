@@ -375,6 +375,10 @@ library(ggpubr)</code></pre>
 <pre class="r"><code>ReplicateAverages &lt;- dat %&gt;% 
   group_by(Treatment, Replicate) %&gt;% 
   summarise_each(list(mean))</code></pre>
+<pre><code>## Warning: `summarise_each_()` was deprecated in dplyr 0.7.0.
+## ℹ Please use `across()` instead.
+## ℹ The deprecated feature was likely used in the dplyr package.
+##   Please report the issue at &lt;]8;;https://github.com/tidyverse/dplyr/issueshttps://github.com/tidyverse/dplyr/issues]8;;&gt;.</code></pre>
 <p>Plot data</p>
 <pre class="r"><code>ggplot(dat, 
        aes(x = Treatment, y = Speed, color = factor(Replicate))) + 
