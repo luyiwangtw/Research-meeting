@@ -3,7 +3,25 @@ title: "BOMP research meeting"
 author: "Luyi Wang"
 date: "2023-09-14"
 output: html_document
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs") })
 ---
+
+# Introduction
+
+In this document is created as part of my presentation at BOMP research meeting 2023 September 19th. I will present two examples related to the main paper for discussion this month:
+
+Senft RA, Diaz-Rohrer B, Colarusso P, Swift L, Jamali N, et al. (2023) A biologist's guide to planning and performing quantitative bioimaging experiments. *PLOS Biology* 21(6): e3002167. <https://doi.org/10.1371/journal.pbio.3002167>
+
+# Example 1: Superplot
+
+As them main paper suggested, a superplot provides not only summary statistics (e.g. mean) but also data distribution which includes individual data points.
+
+The data and code from this exercise is from the paper below:
+
+Samuel J. Lord, Katrina B. Velle, R. Dyche Mullins, Lillian K. Fritz-Laylin; SuperPlots: Communicating reproducibility and variability in cell biology. *J Cell Biol* 1 June 2020; 219 (6): e202001064. <https://doi.org/10.1083/jcb.202001064>
+
+## Load libraries
 
 ```{r, message=FALSE}
 library(dplyr)
@@ -12,31 +30,35 @@ library(ggbeeswarm)
 library(ggpubr)
 ```
 
-Import data
+## Import data
 
 ```{r}
 dat <- read.table(file = "../dat/superplot data.txt",  # path to the file
            header = T,    # Whether to display the header
            sep = ",")     # Separator
+head(dat)
 ```
 
-Data wrangling
+## Data wrangling
 
-```{r, }
+```{r, warning=FALSE}
 ReplicateAverages <- dat %>% 
   group_by(Treatment, Replicate) %>% 
   summarise_each(list(mean))
-
+head(ReplicateAverages)
 ```
 
-Plot data
+## Plot data
 
 ```{r}
 ggplot(dat, 
        aes(x = Treatment, y = Speed, color = factor(Replicate))) + 
-  geom_beeswarm(cex = 3) + scale_colour_brewer(palette = "Set1") + 
-  geom_beeswarm(data = ReplicateAverages, size=8) + 
+  geom_beeswarm(cex = 3) + # spread the individual data points
+  scale_colour_brewer(palette = "Set1") + 
+  geom_beeswarm(data = ReplicateAverages, size = 8) + 
   stat_compare_means(data = ReplicateAverages, 
-                     comparisons = list(c("Control", "Drug")), method = "t.test", paired = TRUE) +
+                     comparisons = list(c("Control", "Drug")), 
+                     method = "t.test", # add p value on the figure
+                     paired = TRUE) +
   theme_classic()
 ```
