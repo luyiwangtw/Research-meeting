@@ -1,0 +1,42 @@
+---
+title: "BOMP research meeting"
+author: "Luyi Wang"
+date: "2023-09-14"
+output: html_document
+---
+
+```{r, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggbeeswarm)
+library(ggpubr)
+```
+
+Import data
+
+```{r}
+dat <- read.table(file = "../dat/superplot data.txt",  # path to the file
+           header = T,    # Whether to display the header
+           sep = ",")     # Separator
+```
+
+Data wrangling
+
+```{r, }
+ReplicateAverages <- dat %>% 
+  group_by(Treatment, Replicate) %>% 
+  summarise_each(list(mean))
+
+```
+
+Plot data
+
+```{r}
+ggplot(dat, 
+       aes(x = Treatment, y = Speed, color = factor(Replicate))) + 
+  geom_beeswarm(cex = 3) + scale_colour_brewer(palette = "Set1") + 
+  geom_beeswarm(data = ReplicateAverages, size=8) + 
+  stat_compare_means(data = ReplicateAverages, 
+                     comparisons = list(c("Control", "Drug")), method = "t.test", paired = TRUE) +
+  theme_classic()
+```
