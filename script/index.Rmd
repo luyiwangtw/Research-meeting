@@ -21,7 +21,7 @@ The data and code from this exercise is from the paper below:
 
 Samuel J. Lord, Katrina B. Velle, R. Dyche Mullins, Lillian K. Fritz-Laylin; SuperPlots: Communicating reproducibility and variability in cell biology. *J Cell Biol* 1 June 2020; 219 (6): e202001064. <https://doi.org/10.1083/jcb.202001064>
 
-## Load libraries
+### Load libraries
 
 ```{r, message=FALSE}
 library(dplyr)
@@ -30,7 +30,7 @@ library(ggbeeswarm)
 library(ggpubr)
 ```
 
-## Import data
+### Import data
 
 ```{r}
 dat <- read.table(file = "../dat/superplot data.txt",  # path to the file
@@ -39,7 +39,7 @@ dat <- read.table(file = "../dat/superplot data.txt",  # path to the file
 head(dat)
 ```
 
-## Data wrangling
+### Data wrangling
 
 ```{r, warning=FALSE}
 ReplicateAverages <- dat %>% 
@@ -48,7 +48,7 @@ ReplicateAverages <- dat %>%
 head(ReplicateAverages)
 ```
 
-## Plot data
+### Plot data
 
 ```{r}
 ggplot(dat, 
@@ -62,3 +62,10 @@ ggplot(dat,
                      paired = TRUE) +
   theme_classic()
 ```
+
+# Example 2: Power analysis
+
+```{r}
+
+```
+
