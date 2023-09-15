@@ -2,7 +2,11 @@
 title: "BOMP research meeting"
 author: "Luyi Wang"
 date: "2023-09-14"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs") })
 ---
@@ -28,6 +32,12 @@ library(dplyr)
 library(ggplot2)
 library(ggbeeswarm)
 library(ggpubr)
+library(pwr)
+library(data.table)
+library(ggforce)
+library(car)
+library(multcomp)
+library(stringr) 
 ```
 
 ### Import data
@@ -66,19 +76,15 @@ ggplot(dat,
 
 In the main paper, it also mentions about running power analysis to estimate the required sample number.
 
-Here is an example derived from the webpage: https://www.alexanderdemos.org/ANOVA4.html#Cohen’s_(d)
+Here is an example derived from the webpage: [https://www.alexanderdemos.org/ANOVA4.html#Cohen's\_(d)](https://www.alexanderdemos.org/ANOVA4.html#Cohen’s_(d)){.uri}
 
 To run a power analysis for sample size estimation, you will need:
 
-1. Effect size (in Cohen’s d): based on literature 
-2. significance level: 0.05
-3. power: 0.8
+1.  Effect size (in Cohen's d): based on literature
+2.  significance level: 0.05
+3.  power: 0.8
 
-```{r}
-library(pwr)
-```
-
-in the the function pwr.t.test, you put NULL for the parameter you aim to estimate.
+In the the function pwr.t.test, you put NULL for the parameter you aim to estimate.
 
 ```{r}
 power.analysis <- pwr.t.test(n = NULL, 
@@ -90,3 +96,86 @@ power.analysis <- pwr.t.test(n = NULL,
 power.analysis
 ```
 
+# Example 3: Statistical analysis and data visualisation in R
+
+Here is an example statistical analysis replicate the analysis run in GraphPad Prism 8 in the following paper:
+
+Li, J., Shami, G.J., Cho, E. et al. Repurposing the mitotic machinery to drive cellular elongation and chromatin reorganisation in Plasmodium falciparum gametocytes. *Nat Commun* 13, 5054 (2022). <https://doi.org/10.1038/s41467-022-32579-4>
+
+I am trying to replicate the stats figure here:
+
+![Figure 2a, c](../docs/example stats figure.png)
+
+### Import data and dat wrangling
+
+```{r}
+length.dat.raw <- read.csv("../dat/figure2c data.csv", header = F)
+
+temp.lengthdat1 <- length.dat.raw[3:5, 1:21] %>% 
+  transpose()  %>% janitor::row_to_names(1) %>% 
+  tidyr::gather(key = "stage", value = "length") %>% 
+  mutate(treatment = "EB1")
+
+temp.lengthdat2 <- length.dat.raw[8:10, 1:21] %>% 
+  transpose()  %>% janitor::row_to_names(1) %>% 
+  tidyr::gather(key = "stage", value = "length") %>% 
+  mutate(treatment = "MT")
+
+length.dat <- bind_rows(temp.lengthdat1, temp.lengthdat2) %>% 
+  mutate(across('stage', str_replace, 'III', 'IIIa'))
+
+
+#assign data class
+length.dat$length <- as.numeric(length.dat$length)
+length.dat$stage = as.factor(length.dat$stage)
+length.dat$treatment = as.factor(length.dat$treatment)
+```
+
+### Plot the data
+
+```{r}
+ggplot(length.dat,
+       aes(x = stage, y = length, category = treatment, fill = treatment)) +
+  geom_violin(alpha = 0.8) +
+  geom_sina(alpha = 0.5) +
+  scale_fill_brewer(palette = "Dark2", name = "Treatment") +
+  geom_boxplot(width = .1, 
+               alpha = 0.5, 
+               position = position_dodge(.9))+
+  stat_summary(fun = "mean", geom = "point",
+               position = position_dodge(.9))  +
+  stat_summary(fun.data = "mean_se", geom = "errorbar", width = .1,
+               position = position_dodge(.9)) +
+  ylab("Length (um)") +
+  theme_classic()
+```
+![](../docs/inset.png)
+
+### Two-way ANOVA
+
+#### Data overview
+
+```{r}
+table(length.dat$stage, length.dat$treatment)
+```
+
+#### Normality test
+
+```{r}
+# Check normality using QQ plot
+mod <- aov(length ~ stage * treatment,
+  data = length.dat)
+qqPlot(mod$residuals, id = F)
+shapiro.test(mod$residuals)
+```
+
+```{r}
+summary(mod)
+```
+
+Tukey post-hoc
+
+```{r, warning=FALSE}
+res_tukey <- glht(mod, linfct = mcp(stage = "Tukey"))
+summary(res_tukey)
+```
