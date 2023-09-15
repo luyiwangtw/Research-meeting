@@ -102,13 +102,15 @@ Here is an example statistical analysis replicate the analysis run in GraphPad P
 
 Li, J., Shami, G.J., Cho, E. et al. Repurposing the mitotic machinery to drive cellular elongation and chromatin reorganisation in Plasmodium falciparum gametocytes. *Nat Commun* 13, 5054 (2022). <https://doi.org/10.1038/s41467-022-32579-4>
 
-I am trying to replicate the stats figure here:
+I am trying to replicate the statistical analysis and figure from the paper:
 
-![Figure 2a, c](../docs/example%20stats%20figure.png)
+![Figure 2a, c. PfEB1-GFP is distributed along the whole length of the nuclear microtubule bundle](../docs/figure 2b.png)
 
-### Import data and dat wrangling
+End-binding protein-1, EB1, has been used as a marker of mitotic microtubules in *Toxoplasma gondii*.
 
-```{r}
+### Import data and data wrangling
+
+```{r, warning=FALSE}
 length.dat.raw <- read.csv("../dat/figure2c data.csv", header = F)
 
 temp.lengthdat1 <- length.dat.raw[3:5, 1:21] %>% 
@@ -146,11 +148,11 @@ ggplot(length.dat,
                position = position_dodge(.9))  +
   stat_summary(fun.data = "mean_se", geom = "errorbar", width = .1,
                position = position_dodge(.9)) +
-  ylab("Length (um)") +
+  ylab("Contour length (um)") +
   theme_classic()
 ```
 
-![](../docs/inset.png)
+![](../docs/figure 2c.png)
 
 ### Statistical analysis
 
@@ -171,6 +173,7 @@ shapiro.test(mod$residuals)
 ```
 
 #### Two-way ANOVA
+
 ```{r}
 summary(mod)
 ```
@@ -181,4 +184,3 @@ Tukey post-hoc
 res_tukey <- glht(mod, linfct = mcp(stage = "Tukey"))
 summary(res_tukey)
 ```
-
