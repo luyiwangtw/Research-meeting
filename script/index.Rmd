@@ -104,7 +104,7 @@ Li, J., Shami, G.J., Cho, E. et al. Repurposing the mitotic machinery to drive c
 
 I am trying to replicate the stats figure here:
 
-![Figure 2a, c](../docs/example stats figure.png)
+![Figure 2a, c](../docs/example%20stats%20figure.png)
 
 ### Import data and dat wrangling
 
@@ -149,9 +149,10 @@ ggplot(length.dat,
   ylab("Length (um)") +
   theme_classic()
 ```
+
 ![](../docs/inset.png)
 
-### Two-way ANOVA
+### Statistical analysis
 
 #### Data overview
 
@@ -169,6 +170,7 @@ qqPlot(mod$residuals, id = F)
 shapiro.test(mod$residuals)
 ```
 
+#### Two-way ANOVA
 ```{r}
 summary(mod)
 ```
@@ -179,3 +181,4 @@ Tukey post-hoc
 res_tukey <- glht(mod, linfct = mcp(stage = "Tukey"))
 summary(res_tukey)
 ```
+
