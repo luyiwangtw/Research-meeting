@@ -69,7 +69,7 @@ ggplot(dat,
                      comparisons = list(c("Control", "Drug")), 
                      method = "t.test", # add p value on the figure
                      paired = TRUE) +
-  stat_summary(fun = "mean", geom = "point", colour = "black", size = 1, data = ReplicateAverages)  +
+  stat_summary(fun = "mean", geom = "point", colour = "black", size = 3, data = ReplicateAverages)  +
   stat_summary(fun.data = "mean_se", geom = "errorbar", width = .1, colour = "black", size = 1, data = ReplicateAverages) +
   theme_classic()
 ```
